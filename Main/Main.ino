@@ -63,9 +63,9 @@ void setup() {
   }
   Serial.println("Se ha iniciado la comunicacion correctamente");
 
-  tmrpcm.setVolume(1);
-  tmrpcm.play("music.wav");
-
+  tmrpcm.setVolume(2);
+  tmrpcm.play("clap-808.wav");
+  
 }
 
 void loop() {
@@ -87,13 +87,16 @@ void loop() {
       if (sound_1){
         Serial.println("Playing first sound");
         tmrpcm.quality(1);
-        tmrpcm.play("music.wav");
+        tmrpcm.play("perc-808.wav");
+        //tmrpcm.play("artic.wav");
         sound_1 = not sound_1;
         }
       else {
         Serial.println("Both sounds");
-        tmrpcm.play("music.wav");
-        tmrpcm.play("kick-808.wav");
+        //tmrpcm.play("music.wav");
+        //tmrpcm.play("kick-808.wav");
+        //tmrpcm.play("clap-808-RS.wav");
+        tmrpcm.play("perc-808.wav");
         sound_1 = not sound_1;
         }
       
