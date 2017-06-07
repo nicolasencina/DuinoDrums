@@ -38,14 +38,10 @@ const int threshold = 100;  // threshold value to decide when the detected sound
 
 // these variables will change:
 int sensorReading = 0;      // variable to store the value read from the sensor pin
-int ledState = LOW;         // variable used to store the last LED status, to toggle the light
 int lastReading = 0;
 int counter = 0;
 int diff = 0;
 int diff_treshold = 0;
-int last_knock_distance = 0;
-int human_knock_freq_limit = 5; // Depende del delay 
-bool reset_last_knock = false;
 bool ignore_next_hits = false;
 int ignore_counter = 0;
 bool sound_1 = true;
@@ -87,21 +83,13 @@ void loop() {
       if (sound_1){
         //Serial.println("Playing first sound");
         tmrpcm.quality(1);
-        //tmrpcm.play("perc-808.wav");
-        //tmrpcm.play("artic.wav");
-        //tmrpcm.play("A.wav");
-        tmrpcm.play("kick.wav");
-        
+        tmrpcm.play("clap.wav");
+      
         sound_1 = not sound_1;
         }
       else {
         //Serial.println("Both sounds");
-        //tmrpcm.play("music.wav");
-        //tmrpcm.play("kick-808.wav");
-        //tmrpcm.play("clap-808-RS.wav");
-        //tmrpcm.play("perc-808.wav");
-        //tmrpcm.play("B.wav");
-        tmrpcm.play("kick.wav");
+        tmrpcm.play("clap.wav");
         sound_1 = not sound_1;
         }
       
