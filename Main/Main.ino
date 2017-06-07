@@ -63,15 +63,15 @@ void setup() {
   }
   Serial.println("Se ha iniciado la comunicacion correctamente");
 
-  tmrpcm.setVolume(2);
-  tmrpcm.play("clap-808.wav");
+  tmrpcm.setVolume(1);
+  //tmrpcm.play("clap-808.wav");
   
 }
 
 void loop() {
   // read the sensor and store it in the variable sensorReading:
   sensorReading = analogRead(knockSensor);
-  //Serial.println(sensorReading);
+  Serial.println(sensorReading);
 
   diff = sensorReading - lastReading;
 
@@ -85,18 +85,23 @@ void loop() {
       Serial.println(counter);
 
       if (sound_1){
-        Serial.println("Playing first sound");
+        //Serial.println("Playing first sound");
         tmrpcm.quality(1);
-        tmrpcm.play("perc-808.wav");
+        //tmrpcm.play("perc-808.wav");
         //tmrpcm.play("artic.wav");
+        //tmrpcm.play("A.wav");
+        tmrpcm.play("kick.wav");
+        
         sound_1 = not sound_1;
         }
       else {
-        Serial.println("Both sounds");
+        //Serial.println("Both sounds");
         //tmrpcm.play("music.wav");
         //tmrpcm.play("kick-808.wav");
         //tmrpcm.play("clap-808-RS.wav");
-        tmrpcm.play("perc-808.wav");
+        //tmrpcm.play("perc-808.wav");
+        //tmrpcm.play("B.wav");
+        tmrpcm.play("kick.wav");
         sound_1 = not sound_1;
         }
       
