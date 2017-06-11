@@ -43,6 +43,7 @@ namespace Drums {
 					ignore_next_hits = false;
 			  		ignore_counter = 0;
 			  	}
+			  	return false;
 			}
 		}
 

@@ -16,7 +16,7 @@ const int SSpin = 10;
 // Clap
 Drums::Sensor Clap(clap_pin , clap_sound);
 // Kick
-Drums::Sensor Kick( kick_pin, kick_sound);
+Drums::Sensor Kick(kick_pin, kick_sound);
 
 // States
 int actualReading[n_sensor];
@@ -24,6 +24,7 @@ int lastReading[n_sensor] = {0, 0};
 bool ignore_next_hits[n_sensor] = {false, false};
 int ignore_counter[n_sensor] = {0, 0};
 bool who_plays[n_sensor] = {false};
+
 
 void setup() {
   pinMode(SSpin, OUTPUT);
@@ -38,7 +39,6 @@ void setup() {
   Serial.println("Se ha iniciado la comunicacion correctamente");
 
   tmrpcm.setVolume(1);
-
 }
 
 void loop() {
