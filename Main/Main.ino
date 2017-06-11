@@ -23,18 +23,23 @@
 
 #include <SD.h>
 #include <TMRpcm.h>
+#include "sensor.h"
 
 File Archivo;
 File Music;
 
 TMRpcm tmrpcm;
 
+String clap_sound = "clap.wav";
+const int clap_pin = A0;
+Drums::Sensor Clap(clap_pin , clap_sound);
 
 // these constants won't change:
 const int ledPin = 13;      // led connected to digital pin 13
 const int SSpin = 10;
-const int knockSensor = A0; // the piezo is connected to analog pin 0
+//const int knockSensor = A0; // the piezo is connected to analog pin 0
 const int threshold = 100;  // threshold value to decide when the detected sound is a knock or not
+
 
 // these variables will change:
 int sensorReading = 0;      // variable to store the value read from the sensor pin
@@ -66,7 +71,8 @@ void setup() {
 
 void loop() {
   // read the sensor and store it in the variable sensorReading:
-  sensorReading = analogRead(knockSensor);
+  //sensorReading = analogRead(knockSensor);
+  sensorReading = Clap.sensor_read();
   Serial.println(sensorReading);
 
   diff = sensorReading - lastReading;
