@@ -37,7 +37,7 @@ Drums::Sensor Clap(clap_pin , clap_sound);
 // these constants won't change:
 const int ledPin = 13;      // led connected to digital pin 13
 const int SSpin = 10;
-//const int knockSensor = A0; // the piezo is connected to analog pin 0
+
 const int threshold = 100;  // threshold value to decide when the detected sound is a knock or not
 
 
@@ -71,7 +71,8 @@ void setup() {
 
 void loop() {
   // read the sensor and store it in the variable sensorReading:
-  //sensorReading = analogRead(knockSensor);
+
+
   sensorReading = Clap.sensor_read();
   Serial.println(sensorReading);
 
@@ -89,13 +90,16 @@ void loop() {
       if (sound_1){
         //Serial.println("Playing first sound");
         tmrpcm.quality(1);
-        tmrpcm.play("clap.wav");
+        //tmrpcm.play("clap.wav");
+
+        Clap.play_sound(tmrpcm);
       
         sound_1 = not sound_1;
         }
       else {
         //Serial.println("Both sounds");
-        tmrpcm.play("clap.wav");
+        //tmrpcm.play("clap.wav");
+        Clap.play_sound(tmrpcm);
         sound_1 = not sound_1;
         }
       
