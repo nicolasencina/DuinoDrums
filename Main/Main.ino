@@ -39,26 +39,23 @@ const int kick_pin = A1;
 Drums::Sensor Kick( kick_pin, kick_sound);
 
 // these constants won't change:
-const int ledPin = 13;      // led connected to digital pin 13
 const int SSpin = 10;
 
-const int threshold = 100;  // threshold value to decide when the detected sound is a knock or not
 
-
-// these variables will change:
-int sensorReading = 0;      // variable to store the value read from the sensor pin
+int sensorReading = 0;   
 int kickReading = 0;
 
 int lastReading = 0;
 int counter = 0;
-int diff = 0;
-int diff_treshold = 0;
+
 bool ignore_next_hits = false;
 int ignore_counter = 0;
-bool sound_1 = true;
+
+
+int actual_Reading[2];
+int last_Reading[2];
 
 void setup() {
-  pinMode(ledPin, OUTPUT); // declare the ledPin as as OUTPUT
   pinMode(SSpin, OUTPUT);
   
   Serial.begin(9600);       // use the serial port
@@ -72,48 +69,15 @@ void setup() {
 
   tmrpcm.setVolume(1);
 
-  
 }
 
 void loop() {
-  // read the sensor and store it in the variable sensorReading:
-
 
   sensorReading = Clap.sensor_read();
   kickReading = Kick.sensor_read();
-  //Serial.println(kickReading);
-  
 
-  diff = sensorReading - lastReading;
-
-  if (not ignore_next_hits){
-  
-    if (sensorReading > threshold && diff > diff_treshold){
-      ignore_next_hits = true;
-      counter += 1;
-    
-      Serial.print("Counter: ");
-      Serial.println(counter);
-
-      if (sound_1){
-        Kick.play_sound(tmrpcm);
-        sound_1 = not sound_1;
-        }
-      else {
-        Clap.play_sound(tmrpcm);
-        sound_1 = not sound_1;
-        }
-      
-    }
-  }
-  
-  else{
-    ignore_counter += 1;
-    if (ignore_counter > 3){
-      ignore_next_hits = false;
-      ignore_counter = 0;
-      }
-    }    
+ 
+  bool should_clap = Clap.should_play(sensorReading, lastReading, ignore_next_hits, ignore_counter);
     
   delay(15);  // delay to avoid overloading the serial port buffer
   lastReading = sensorReading;
