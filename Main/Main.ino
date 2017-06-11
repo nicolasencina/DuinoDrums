@@ -30,9 +30,13 @@ File Music;
 
 TMRpcm tmrpcm;
 
-String clap_sound = "clap.wav";
+char clap_sound[] = "clap.wav";
 const int clap_pin = A0;
 Drums::Sensor Clap(clap_pin , clap_sound);
+
+char kick_sound[] = "kick.wav";
+const int kick_pin = A1;
+Drums::Sensor Kick( kick_pin, kick_sound);
 
 // these constants won't change:
 const int ledPin = 13;      // led connected to digital pin 13
@@ -43,6 +47,8 @@ const int threshold = 100;  // threshold value to decide when the detected sound
 
 // these variables will change:
 int sensorReading = 0;      // variable to store the value read from the sensor pin
+int kickReading = 0;
+
 int lastReading = 0;
 int counter = 0;
 int diff = 0;
@@ -65,7 +71,7 @@ void setup() {
   Serial.println("Se ha iniciado la comunicacion correctamente");
 
   tmrpcm.setVolume(1);
-  //tmrpcm.play("clap-808.wav");
+
   
 }
 
@@ -74,7 +80,9 @@ void loop() {
 
 
   sensorReading = Clap.sensor_read();
-  Serial.println(sensorReading);
+  kickReading = Kick.sensor_read();
+  //Serial.println(kickReading);
+  
 
   diff = sensorReading - lastReading;
 
@@ -88,17 +96,10 @@ void loop() {
       Serial.println(counter);
 
       if (sound_1){
-        //Serial.println("Playing first sound");
-        tmrpcm.quality(1);
-        //tmrpcm.play("clap.wav");
-
-        Clap.play_sound(tmrpcm);
-      
+        Kick.play_sound(tmrpcm);
         sound_1 = not sound_1;
         }
       else {
-        //Serial.println("Both sounds");
-        //tmrpcm.play("clap.wav");
         Clap.play_sound(tmrpcm);
         sound_1 = not sound_1;
         }

@@ -1,5 +1,4 @@
-//#ifndef sensor.h
-//# define sensor.h
+
 
 namespace Drums {
 
@@ -7,17 +6,18 @@ namespace Drums {
 
 	private:
 		int _input_pin;
-		String _sound;
+		char* _sound;
         
 	public:
-		Sensor(int pin, String sound){
+		Sensor(int pin, char* sound){
 			_input_pin = pin;
 			_sound = sound;
 		}
-   
+
+    // Public Functions:
 		int sensor_read(){ return analogRead(_input_pin); }
-	  void play_sound(TMRpcm &sound_player){ sound_player.play("clap.wav");}
-	
+	  void play_sound(TMRpcm &sound_player){ sound_player.play(_sound);}
+    
 	};
 
 }
