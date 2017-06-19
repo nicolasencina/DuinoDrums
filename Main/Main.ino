@@ -1,6 +1,8 @@
 #include <SD.h>
 #include <TMRpcm.h>
 #include "sensor.h"
+#include <SimpleSDAudio.h>
+
 
 #define n_sensor 2
 #define clap_pin A0
@@ -23,7 +25,7 @@ int actualReading[n_sensor];
 int lastReading[n_sensor] = {0, 0};
 bool ignore_next_hits[n_sensor] = {false, false};
 int ignore_counter[n_sensor] = {0, 0};
-bool who_plays[n_sensor] = {false};
+bool who_plays[n_sensor] = {false, false};
 
 
 void setup() {
