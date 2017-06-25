@@ -20,6 +20,10 @@ namespace Drums {
 		
 		void play_sound(TMRpcm &sound_player){ sound_player.play(_sound);}
 		
+		void change_sound(char* sound){
+			_sound = sound;
+		}
+
 		bool should_play(int &sensorReading, int &lastReading, bool &ignore_next_hits, int &ignore_counter){
 
 			int diff = sensorReading - lastReading;

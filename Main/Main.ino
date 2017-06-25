@@ -3,14 +3,22 @@
 #include "sensor.h"
 
 #define n_sensor 2
+#define sound_select_button 2
 #define clap_pin A0
 #define kick_pin A1
 #define clap_sound "clap.wav"
 #define kick_sound "kick.wav"
+#define clap_sound_0 "clap.wav"
+#define kick_sound_0 "kick.wav"
+#define clap_sound_1 "clap.wav"
+#define kick_sound_1 "kick.wav"
 
 TMRpcm tmrpcm;
 
 const int SSpin = 10;
+int buttonState = 0; 
+int lastButtonState = 0;
+bool sound_change = false;
 
 //////////// Sensor Objects /////////////
 // Clap
@@ -28,7 +36,8 @@ bool who_plays[n_sensor] = {false};
 
 void setup() {
   pinMode(SSpin, OUTPUT);
-  
+  pinMode(sound_select_button, INPUT);
+
   Serial.begin(9600);       // use the serial port
   tmrpcm.speakerPin = 9; // salida de audio
 
@@ -41,8 +50,29 @@ void setup() {
   tmrpcm.setVolume(1);
 }
 
+void change_sounds_layout(bool &sound_change){
+  if (sound_change){
+    Clap.change_sound(clap_sound_0);
+    Kick.change_sound(kick_sound_0);
+  }
+  else {
+    Clap.change_sound(clap_sound_1);
+    Kick.change_sound(kick_sound_1);
+  }
+}
+
 void loop() {
 
+  // Detect rising pulse of button to change sounds of each sensor
+  buttonState = digitalRead(sound_select_button);
+  if (buttonState != lastButtonState){
+    if (buttonState == HIGH){
+      sound_change = not sound_change;
+      change_sounds_layout(sound_change);
+    }
+  }
+
+  // Get the sensors reading
   actualReading[0] = Clap.sensor_read();
   actualReading[1] = Kick.sensor_read();
 
@@ -57,7 +87,11 @@ void loop() {
     }  
 
   delay(15);  
+  // Store the last sensor readings
   lastReading[0] = actualReading[0];
   lastReading[1] = actualReading[1];
+
+  // Actualize last button reading
+  lastButtonState = digitalRead(sound_select_button);
 
 }
