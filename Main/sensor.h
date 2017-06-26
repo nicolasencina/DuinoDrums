@@ -7,6 +7,7 @@ namespace Drums {
 	private:
 		int _input_pin;
 		char* _sound;
+    int output;
    
 		
 	public:
@@ -30,6 +31,10 @@ namespace Drums {
 					ignore_next_hits = true;
 					Serial.print("Playing: ");
 					Serial.println(_sound);
+          Serial.print("Hit intensity: ");
+          Serial.println(sensorReading);
+          
+         
 					return true; 
 					}
 

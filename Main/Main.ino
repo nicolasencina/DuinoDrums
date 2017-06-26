@@ -5,12 +5,13 @@
 #define n_sensor 2
 #define clap_pin A0
 #define kick_pin A1
-#define clap_sound "clap.wav"
-#define kick_sound "kick.wav"
+#define clap_sound "tom1.wav"
+#define kick_sound "ohh.wav"
 
-TMRpcm tmrpcm;
+TMRpcm tmrpcm1;
+//TMRpcm tmrpcm2;
 
-const int SSpin = 10;
+const int SSpin = 6;
 
 //////////// Sensor Objects /////////////
 // Clap
@@ -30,7 +31,9 @@ void setup() {
   pinMode(SSpin, OUTPUT);
   
   Serial.begin(9600);       // use the serial port
-  tmrpcm.speakerPin = 9; // salida de audio
+  tmrpcm1.speakerPin = 9; // salida de audio
+
+  //tmrpcm2.speakerPin = 10; // salida de audio
 
   if (!SD.begin(10)) {
     Serial.println("Se ha producido un fallo al iniciar la comunicacion");
@@ -38,7 +41,8 @@ void setup() {
   }
   Serial.println("Se ha iniciado la comunicacion correctamente");
 
-  tmrpcm.setVolume(1);
+  tmrpcm1.setVolume(1);
+  //tmrpcm2.setVolume(1);
 }
 
 void loop() {
@@ -50,10 +54,10 @@ void loop() {
   who_plays[1] = Kick.should_play(actualReading[1], lastReading[1], ignore_next_hits[1], ignore_counter[1]);
 
   if (who_plays[0]){
-    Clap.play_sound(tmrpcm);
+    Clap.play_sound(tmrpcm1);
     }
   if (who_plays[1]){
-    Kick.play_sound(tmrpcm);
+    Kick.play_sound(tmrpcm1);
     }  
 
   delay(15);  
