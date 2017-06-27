@@ -1,7 +1,8 @@
+#include <SimpleTimer.h>
+
 #include <SD.h>
 #include <TMRpcm.h>
 #include "sensor.h"
-
 
 #define n_sensor 2
 #define sound_select_button 2
@@ -13,7 +14,6 @@
 #define kick_sound_0 "tom1.wav"
 #define clap_sound_1 "ohh.wav"
 #define kick_sound_1 "ohh.wav"
-
 
 TMRpcm tmrpcm1;
 //TMRpcm tmrpcm2;
@@ -67,6 +67,26 @@ void change_sounds_layout(bool &sound_change){
   }
 }
 
+void repeatTask(){
+  return
+}
+
+void startSaving(){
+  start_saving = true;
+}
+
+void DetectRisingEdge(int button_state, int lastButton_state, int button_pin, bool last_state){
+  // Detect rising pulse of button to change sounds of each sensor
+  button_state = digitalRead(button_pin);
+  if (button_State != lastButton_state){
+    if (button_state == HIGH){
+      return true;
+    }
+  return false;
+  }
+}
+
+
 void loop() {
 
    // Detect rising pulse of button to change sounds of each sensor
@@ -87,10 +107,12 @@ void loop() {
 
   if (who_plays[0]){
     Clap.play_sound(tmrpcm1);
+
     }
   if (who_plays[1]){
     Kick.play_sound(tmrpcm1);
-    }  
+    }
+
 
   delay(15); 
   // Store the last sensor readings 
