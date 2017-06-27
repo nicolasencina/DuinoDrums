@@ -1,11 +1,12 @@
 #include <SimpleTimer.h>
-
+#include <QueueList.h>
 #include <SD.h>
 #include <TMRpcm.h>
 #include "sensor.h"
 
 #define n_sensor 2
 #define sound_select_button 2
+#define save_button 3
 #define clap_pin A0
 #define kick_pin A1
 #define clap_sound "tom1.wav"
@@ -19,9 +20,23 @@ TMRpcm tmrpcm1;
 //TMRpcm tmrpcm2;
 
 const int SSpin = 6;
+
+// Change sounds variables
 int buttonState = 0; 
 int lastButtonState = 0;
 bool sound_change = false;
+
+// Save playing variables
+int saveButtonState = 0;
+int lastState_SaveButton = 0;
+bool saving = false;
+int multifacetic_button = 0;
+unsigned int iterations = 0;
+unsigned int total_iterations = 0;
+
+QueueList <int> states;
+QueueList <unsigned int> times;
+
 
 //////////// Sensor Objects /////////////
 // Clap
@@ -67,18 +82,10 @@ void change_sounds_layout(bool &sound_change){
   }
 }
 
-void repeatTask(){
-  return
-}
-
-void startSaving(){
-  start_saving = true;
-}
-
-void DetectRisingEdge(int button_state, int lastButton_state, int button_pin, bool last_state){
-  // Detect rising pulse of button to change sounds of each sensor
-  button_state = digitalRead(button_pin);
-  if (button_State != lastButton_state){
+bool DetectRisingEdge(int &lastButton_state, int button_pin){
+  // Detect rising pulse of button
+  int button_state = digitalRead(button_pin);
+  if (button_state != lastButton_state){
     if (button_state == HIGH){
       return true;
     }
@@ -86,16 +93,60 @@ void DetectRisingEdge(int button_state, int lastButton_state, int button_pin, bo
   }
 }
 
+void PlayRecord(unsigned int total_iterations){
+  unsigned int next_time;
+  unsigned int actual_iteration = 0;
+  int next_state;
+  bool found = true;
+
+
+  for (unsigned int k=0; k<=total_iterations; k++){
+    // Extract time and state of the next sound to be played
+    if (found){
+      next_time = times.pop();
+      next_state = states.pop();
+      found = false;
+    }
+
+    // Wait till k equals the time of the next sound to be played
+    if (k == next_time){
+      found = true;
+      if (next_state == 0){ Clap.play_sound(tmrpcm1); }
+      else if (next_state == 1){ Kick.play_sound(tmrpcm1); }
+    }
+    delay(15);
+  }
+
+}
+
 
 void loop() {
 
-   // Detect rising pulse of button to change sounds of each sensor
-  buttonState = digitalRead(sound_select_button);
-  if (buttonState != lastButtonState){
-    if (buttonState == HIGH){
-      sound_change = not sound_change;
-      change_sounds_layout(sound_change);
+   // Detect rising pulse of button to change sounds of each sensos
+  if (DetectRisingEdge(lastButtonState, sound_select_button)){
+    sound_change = not sound_change;
+    change_sounds_layout(sound_change); 
+  }
+
+  if (DetectRisingEdge( lastState_SaveButton, save_button)){
+    
+    multifacetic_button += 1;
+
+    if (multifacetic_button == 4){ multifacetic_button = 1;}
+    
+    if (multifacetic_button == 1){
+      iterations = 0; // reinit timer
+      saving = true;
     }
+
+    else if(multifacetic_button == 2){
+      saving = false;
+    }
+
+    else if( multifacetic_button == 3){
+      PlayRecord(total_iterations);
+    }
+
   }
 
   // Get the sensors reading
@@ -107,19 +158,32 @@ void loop() {
 
   if (who_plays[0]){
     Clap.play_sound(tmrpcm1);
-
+    if (saving){ 
+      states.push(0);
+      times.push(iterations);
+      total_iterations = iterations;
+      } 
     }
   if (who_plays[1]){
     Kick.play_sound(tmrpcm1);
+    if (saving){ 
+      states.push(1);
+      times.push(iterations);
+      total_iterations = iterations;
+      } 
     }
 
 
   delay(15); 
+
   // Store the last sensor readings 
   lastReading[0] = actualReading[0];
   lastReading[1] = actualReading[1];
 
-  // Actualize last button reading
+  // Actualize last button readings
   lastButtonState = digitalRead(sound_select_button);
+  lastState_SaveButton = digitalRead(save_button);
+
+  if (saving) {iterations += 1;} // Increase iterations if saving mode is enabled
 
 }
