@@ -136,13 +136,16 @@ void loop() {
     if (multifacetic_button == 1){
       iterations = 0; // reinit timer
       saving = true;
+      Serial.println("Saving Mode");
     }
 
     else if(multifacetic_button == 2){
       saving = false;
+      Serial.println("Saving Mode Finished");
     }
 
     else if( multifacetic_button == 3){
+      Serial.println("Playing Mode");
       PlayRecord(total_iterations);
     }
 
