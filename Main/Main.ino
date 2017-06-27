@@ -11,9 +11,9 @@
 #define clap_sound "tom1.wav"
 #define kick_sound "ohh.wav"
 #define clap_sound_0 "tom1.wav"
-#define kick_sound_0 "tom1.wav"
-#define clap_sound_1 "ohh.wav"
-#define kick_sound_1 "ohh.wav"
+#define kick_sound_0 "ohh.wav"
+#define clap_sound_1 "tom2.wav"
+#define kick_sound_1 "chh.wav"
 
 TMRpcm tmrpcm1;
 //TMRpcm tmrpcm2;
@@ -87,9 +87,15 @@ bool DetectRisingEdge(int &lastButton_state, int button_pin){
   if (button_state != lastButton_state){
     if (button_state == HIGH){
       return true;
+    } else{
+      return false;
     }
+  //return false;
+  }
+  else {
   return false;
   }
+  
 }
 
 void PlayRecord(unsigned int total_iterations){
@@ -174,6 +180,10 @@ void loop() {
       total_iterations = iterations;
       } 
     }
+  
+  // Actualize last button readings
+  lastButtonState = digitalRead(sound_select_button);
+  lastState_SaveButton = digitalRead(save_button);
 
 
   delay(15); 
@@ -182,10 +192,8 @@ void loop() {
   lastReading[0] = actualReading[0];
   lastReading[1] = actualReading[1];
 
-  // Actualize last button readings
-  lastButtonState = digitalRead(sound_select_button);
-  lastState_SaveButton = digitalRead(save_button);
-
+  
   if (saving) {iterations += 1;} // Increase iterations if saving mode is enabled
 
 }
+
