@@ -19,7 +19,7 @@ namespace Drums {
   // Public Functions:
     int sensor_read(){ return analogRead(_input_pin); }
     
-    void play_sound(TMRpcm &sound_player){ sound_player.play(_sound);}
+    void play_sound(TMRpcm &sound_player, int speakers){ sound_player.play(_sound, speakers);}
     
     void change_sound(char* sound){
       _sound = sound;
@@ -60,3 +60,4 @@ namespace Drums {
   };
 
 }
+

@@ -18,7 +18,7 @@
 TMRpcm tmrpcm1;
 //TMRpcm tmrpcm2;
 
-const int SSpin = 6;
+const int SSpin = 10;
 
 // Change sounds variables
 int buttonState = 0; 
@@ -56,7 +56,11 @@ void setup() {
   pinMode(sound_select_button, INPUT);
   
   Serial.begin(9600);       // use the serial port
-  tmrpcm1.speakerPin = 9; // salida de audio
+  tmrpcm1.speakerPin = 11; // salida de audio
+  pinMode(12,OUTPUT);
+  
+  tmrpcm1.speakerPin2 = 5;
+  pinMode(2,OUTPUT);
 
   //tmrpcm2.speakerPin = 10; // salida de audio
 
@@ -116,8 +120,8 @@ void PlayRecord(unsigned int total_iterations){
     // Wait till k equals the time of the next sound to be played
     if (k == next_time){
       found = true;
-      if (next_state == 0){ Clap.play_sound(tmrpcm1); }
-      else if (next_state == 1){ Kick.play_sound(tmrpcm1); }
+      if (next_state == 0){ Clap.play_sound(tmrpcm1, 0); }
+      else if (next_state == 1){ Kick.play_sound(tmrpcm1, 1); }
     }
     delay(15);
   }
@@ -165,7 +169,7 @@ void loop() {
   who_plays[1] = Kick.should_play(actualReading[1], lastReading[1], ignore_next_hits[1], ignore_counter[1]);
 
   if (who_plays[0]){
-    Clap.play_sound(tmrpcm1);
+    Clap.play_sound(tmrpcm1, 0);
     if (saving){ 
       states.push(0);
       times.push(iterations);
@@ -173,7 +177,7 @@ void loop() {
       } 
     }
   if (who_plays[1]){
-    Kick.play_sound(tmrpcm1);
+    Kick.play_sound(tmrpcm1, 1);
     if (saving){ 
       states.push(1);
       times.push(iterations);
