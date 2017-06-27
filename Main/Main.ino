@@ -1,4 +1,3 @@
-#include <SimpleTimer.h>
 #include <QueueList.h>
 #include <SD.h>
 #include <TMRpcm.h>
